@@ -1,0 +1,21 @@
+# Local PostgreSQL override for developers who have PostgreSQL running locally.
+# Usage: -Dspring.profiles.active=dev,local-pg
+# Or set in IntelliJ Run Configuration: Active profiles = dev,local-pg
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB_NAME:mayk_enterprise_kit_lite}
+    username: ${DB_USERNAME:esk_user}
+    password: ${DB_PASSWORD:esk_password}
+    driver-class-name: org.postgresql.Driver
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true

@@ -1,0 +1,67 @@
+spring:
+  datasource:
+    # Resolution order:
+    # 1. JDBC_DATABASE_URL  — set this in Railway to ${{Postgres.DATABASE_URL}} after converting to jdbc: prefix
+    #                         OR auto-populated by RailwayDatabaseUrlProcessor from DATABASE_URL
+    # 2. DATABASE_URL       — full JDBC URL (jdbc:postgresql://...); postgres:// URLs are auto-rewritten
+    # 3. Constructed from individual vars: PGHOST/PGPORT/PGDATABASE (Railway native) or DB_HOST/DB_PORT/DB_NAME (Docker Compose)
+    url: ${JDBC_DATABASE_URL:${DATABASE_URL:jdbc:postgresql://${PGHOST:${DB_HOST:postgres}}:${PGPORT:${DB_PORT:5432}}/${PGDATABASE:${DB_NAME:mayk_enterprise_kit_lite}}?sslmode=${DB_SSL_MODE:prefer}}}
+    username: ${PGUSER:${DB_USERNAME:postgres}}
+    password: ${PGPASSWORD:${DB_PASSWORD:password}}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      validation-timeout: 5000
+      leak-detection-threshold: 60000
+      connection-test-query: SELECT 1
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+  liquibase:
+    enabled: true
+
+# Production optimizations
+server:
+  port: ${PORT:8080}
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+
+# Production logging
+logging:
+  level:
+    root: INFO
+    com.enterprise.starter.kit: DEBUG
+    org.springframework.security: WARN
+    org.hibernate: WARN
+    liquibase: INFO
+    org.springframework.jdbc.datasource: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/enterprise-starter-kit.log
+
+# Production cache settings
+cache:
+  caffeine:
+    spec: maximumSize=1000,expireAfterWrite=300s
+
+# Production JWT settings
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600}

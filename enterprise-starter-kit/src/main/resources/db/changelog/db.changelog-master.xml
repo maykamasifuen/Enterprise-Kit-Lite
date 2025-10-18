@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <!-- Include migrations in correct numerical order -->
+    <include file="db/migration/V1__Initial_Schema.sql" relativeToChangelogFile="false"/>
+    <include file="db/migration/V2__Business_Tables.sql" relativeToChangelogFile="false"/>
+    <include file="db/migration/V3__Supporting_Tables.sql" relativeToChangelogFile="false"/>
+    <include file="db/migration/V4__Performance_Indexes.sql" relativeToChangelogFile="false"/>
+    <include file="db/migration/V5__Demo_Seed_Data.sql" relativeToChangelogFile="false"/>
+    <include file="db/migration/V6__Add_Missing_Customer_Columns.sql" relativeToChangelogFile="false"/>
+</databaseChangeLog>

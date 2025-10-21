@@ -1,0 +1,1356 @@
+﻿/* You can add global styles to this file, and also import other style files */
+
+/* ── Global box-sizing reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  /* Prevent horizontal overflow globally */
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  /* Ensure text doesn't force horizontal scroll */
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Global PrimeNG responsive fixes ── */
+
+/* Toolbar: wrap on mobile */
+@media (max-width: 768px) {
+  .p-toolbar {
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem !important;
+  }
+
+  .p-toolbar .p-toolbar-start,
+  .p-toolbar .p-toolbar-end {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+  }
+
+  /* Tables: allow horizontal scroll on small screens */
+  .p-datatable-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cards: remove excess padding on mobile */
+  .p-card .p-card-body {
+    padding: 1rem !important;
+  }
+
+  /* Dialog: full width on mobile */
+  .p-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .p-toolbar {
+    padding: 0.5rem !important;
+  }
+
+  .p-card .p-card-body {
+    padding: 0.75rem !important;
+  }
+
+  /* Buttons: allow wrapping text on tiny screens */
+  .p-button .p-button-label {
+    font-size: 0.8rem !important;
+  }
+
+  /* Page header buttons — hide labels, show only icons */
+  .p-button.p-button-sm .p-button-label {
+    display: none !important;
+  }
+
+  .p-button.p-button-sm {
+    padding: 0.4rem 0.5rem !important;
+  }
+}
+
+/* ========================================
+   Global Page Layout — All list/detail pages
+   ======================================== */
+
+/* Common page wrapper used by invoice-list, expenses, billing, etc. */
+.page,
+.customers-container,
+.page-wrapper,
+.content-wrapper {
+  padding: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .page,
+  .customers-container,
+  .page-wrapper,
+  .content-wrapper {
+    padding: 1rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page,
+  .customers-container,
+  .page-wrapper,
+  .content-wrapper {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* ── Toolbar actions: wrap on smaller screens ── */
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ── Page headers ── */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--app-text-primary, #1e293b);
+}
+
+.page-header .subtitle {
+  color: var(--app-text-secondary, #64748b);
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.1rem;
+  }
+}
+
+/* ── Table wrapper: always scrollable on mobile ── */
+.table-card,
+.p-datatable {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Force table wrapper scroll — PrimeNG applies this wrapper */
+.p-datatable-wrapper {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Search input: full width on mobile ── */
+@media (max-width: 768px) {
+  .search-input,
+  .p-iconfield,
+  .p-icon-field {
+    width: 100% !important;
+  }
+
+  .table-toolbar {
+    width: 100%;
+  }
+}
+
+/* ── Table toolbar wrapping ── */
+.table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* ── Form grids inside dialogs ── */
+@media (max-width: 576px) {
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ========================================
+   Global RTL (Right-to-Left) Styles
+   ======================================== */
+
+/* Base RTL - Apply to everything when dir=rtl on html */
+html[dir="rtl"] {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] body {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* ========================================
+   PrimeNG Menubar RTL
+   ======================================== */
+html[dir="rtl"] p-menubar,
+html[dir="rtl"] .p-menubar {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-menubar > .p-menubar-root-list {
+  flex-direction: column;
+}
+
+html[dir="rtl"] .p-menubar .p-menubar-button {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+html[dir="rtl"] .p-menuitem {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-menuitem-content {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-menuitem-link {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-menuitem-icon {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+html[dir="rtl"] .p-menuitem-text {
+  margin-right: 0 !important;
+}
+
+/* ========================================
+   PrimeNG Toolbar RTL
+   ======================================== */
+html[dir="rtl"] p-toolbar,
+html[dir="rtl"] .p-toolbar {
+  direction: rtl !important;
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-toolbar-start {
+  order: 2 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+html[dir="rtl"] .p-toolbar-center {
+  order: 1 !important;
+}
+
+html[dir="rtl"] .p-toolbar-end {
+  order: 0 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+/* ========================================
+   PrimeNG DataTable RTL
+   ======================================== */
+html[dir="rtl"] p-table,
+html[dir="rtl"] .p-datatable {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-datatable-table {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-datatable-thead > tr > th {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-datatable-tbody > tr > td {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-datatable-header {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-datatable-footer {
+  text-align: right !important;
+}
+
+/* ========================================
+   PrimeNG Paginator RTL
+   ======================================== */
+html[dir="rtl"] .p-paginator {
+  direction: rtl !important;
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-paginator-first,
+html[dir="rtl"] .p-paginator-prev,
+html[dir="rtl"] .p-paginator-next,
+html[dir="rtl"] .p-paginator-last {
+  transform: scaleX(-1) !important;
+}
+
+/* ========================================
+   PrimeNG Dialog RTL
+   ======================================== */
+html[dir="rtl"] p-dialog,
+html[dir="rtl"] .p-dialog {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-dialog-header {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-dialog-title {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+html[dir="rtl"] .p-dialog-header-close {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+html[dir="rtl"] .p-dialog-content {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-dialog-footer {
+  direction: rtl !important;
+  flex-direction: row-reverse !important;
+}
+
+/* ========================================
+   PrimeNG Button RTL
+   ======================================== */
+html[dir="rtl"] .p-button {
+  direction: rtl !important;
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .p-button-icon-left {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+  order: 1 !important;
+}
+
+html[dir="rtl"] .p-button-label {
+  order: 0 !important;
+}
+
+html[dir="rtl"] .p-button-icon-right {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+/* ========================================
+   PrimeNG Card RTL
+   ======================================== */
+html[dir="rtl"] p-card,
+html[dir="rtl"] .p-card {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-card-header {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-card-body {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-card-content {
+  text-align: right !important;
+}
+
+/* ========================================
+   PrimeNG Input/Form RTL
+   ======================================== */
+html[dir="rtl"] .p-inputtext,
+html[dir="rtl"] .p-textarea,
+html[dir="rtl"] input[type="text"],
+html[dir="rtl"] input[type="number"],
+html[dir="rtl"] input[type="email"],
+html[dir="rtl"] input[type="password"],
+html[dir="rtl"] textarea {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-inputnumber {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-inputnumber-input {
+  text-align: right !important;
+}
+
+/* ========================================
+   PrimeNG Select/Dropdown RTL
+   ======================================== */
+html[dir="rtl"] p-select,
+html[dir="rtl"] p-dropdown,
+html[dir="rtl"] .p-select,
+html[dir="rtl"] .p-dropdown {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-select-label,
+html[dir="rtl"] .p-dropdown-label {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-select-dropdown,
+html[dir="rtl"] .p-dropdown-trigger {
+  order: -1 !important;
+}
+
+html[dir="rtl"] .p-select-overlay,
+html[dir="rtl"] .p-dropdown-panel {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir="rtl"] .p-select-option,
+html[dir="rtl"] .p-dropdown-item {
+  text-align: right !important;
+}
+
+/* ========================================
+   PrimeNG DatePicker/Calendar RTL
+   ======================================== */
+html[dir="rtl"] p-datepicker,
+html[dir="rtl"] p-calendar,
+html[dir="rtl"] .p-datepicker,
+html[dir="rtl"] .p-calendar {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-datepicker-header {
+  flex-direction: row-reverse !important;
+}
+
+/* ========================================
+   PrimeNG Tag RTL
+   ======================================== */
+html[dir="rtl"] p-tag,
+html[dir="rtl"] .p-tag {
+  direction: rtl !important;
+}
+
+/* ========================================
+   PrimeNG Toast RTL
+   ======================================== */
+html[dir="rtl"] .p-toast {
+  left: 20px !important;
+  right: auto !important;
+}
+
+html[dir="rtl"] .p-toast-message {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .p-toast-message-content {
+  flex-direction: row-reverse !important;
+}
+
+/* ========================================
+   Custom Component RTL
+   ======================================== */
+
+/* Page Container */
+html[dir="rtl"] .page {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Toolbar Title & Actions */
+html[dir="rtl"] .toolbar-title {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .toolbar-actions {
+  flex-direction: row-reverse !important;
+  gap: 0.5rem;
+}
+
+/* Action Buttons in Table */
+html[dir="rtl"] .action-buttons {
+  flex-direction: row-reverse !important;
+  justify-content: flex-start !important;
+}
+
+/* Form Grid */
+html[dir="rtl"] .form-grid {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .form-grid label {
+  text-align: right !important;
+}
+
+/* Navbar Actions */
+html[dir="rtl"] .navbar-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+html[dir="rtl"] .brand {
+  flex-direction: row-reverse !important;
+  margin-left: 1rem !important;
+  margin-right: 0 !important;
+}
+
+html[dir="rtl"] .brand i {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+html[dir="rtl"] .language-switcher,
+html[dir="rtl"] .user-section {
+  padding-right: 0;
+  padding-left: 0;
+  border-right: none;
+  border-left: none;
+}
+
+html[dir="rtl"] .username {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .username i {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+@media (max-width: 900px) {
+  html[dir="rtl"] .navbar-actions {
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+}
+
+/* Notification Panel */
+html[dir="rtl"] .notification-panel {
+  right: auto !important;
+  left: 0 !important;
+}
+
+html[dir="rtl"] .notification-badge {
+  right: auto !important;
+  left: 0 !important;
+}
+
+html[dir="rtl"] .notification-item {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .panel-header {
+  flex-direction: row-reverse !important;
+}
+
+/* View Grid in Dialogs */
+html[dir="rtl"] .view-grid {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .view-row {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .view-label {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .view-value {
+  text-align: left !important;
+}
+
+/* Stats Grid */
+html[dir="rtl"] .stats-grid {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .stat-card-inner {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .stat-icon-bubble {
+  right: auto !important;
+  left: 0 !important;
+}
+
+html[dir="rtl"] .stat-details {
+  padding-inline-start: 48px !important;
+  padding-inline-end: 0 !important;
+}
+
+/* Charts Section */
+html[dir="rtl"] .charts-section {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .card-header {
+  flex-direction: row-reverse !important;
+}
+
+html[dir="rtl"] .card-header-left {
+  flex-direction: row-reverse !important;
+}
+
+/* Summary Items */
+html[dir="rtl"] .summary-item {
+  direction: rtl !important;
+}
+
+/* Quick Actions */
+html[dir="rtl"] .quick-actions {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .action-buttons {
+  direction: rtl !important;
+}
+
+/* Report Cards */
+html[dir="rtl"] .report-cards {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .report-card-header {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .card-description {
+  text-align: right !important;
+}
+
+html[dir="rtl"] .card-stats {
+  direction: rtl !important;
+}
+
+html[dir="rtl"] .card-actions {
+  flex-direction: row-reverse !important;
+}
+
+/* Import Dialog */
+html[dir="rtl"] .import-surface {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* ========================================
+   LTR Mode (default)
+   ======================================== */
+html[dir="ltr"] {
+  direction: ltr !important;
+}
+
+html[dir="ltr"] body {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* ============================================================
+   CHECKBOX GLOBAL OVERRIDE — ensures checkmark always appears
+   in PrimeNG v21 table bulk-selection in all themes
+   ============================================================ */
+
+/* Unchecked box — visible border */
+.p-checkbox .p-checkbox-box {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  border-radius: 4px !important;
+  border: 2px solid currentColor !important;
+  transition: background-color 0.15s, border-color 0.15s !important;
+}
+
+/* Checked state — indigo fill in light, soft-indigo in dark */
+.p-checkbox-checked .p-checkbox-box,
+.p-checkbox.p-highlight .p-checkbox-box,
+.p-checkbox .p-checkbox-box.p-highlight {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #ffffff !important;
+}
+
+/* SVG checkmark icon inside the box */
+.p-checkbox-checked .p-checkbox-box .p-checkbox-icon,
+.p-checkbox-checked .p-checkbox-box .p-icon,
+.p-checkbox-checked .p-checkbox-box svg,
+.p-checkbox-checked .p-checkbox-box svg path,
+.p-checkbox.p-highlight .p-checkbox-box .p-checkbox-icon,
+.p-checkbox.p-highlight .p-checkbox-box .p-icon,
+.p-checkbox.p-highlight .p-checkbox-box svg,
+.p-checkbox.p-highlight .p-checkbox-box svg path,
+.p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon,
+.p-checkbox .p-checkbox-box.p-highlight .p-icon,
+.p-checkbox .p-checkbox-box.p-highlight svg,
+.p-checkbox .p-checkbox-box.p-highlight svg path {
+  display: block !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Table header "select all" */
+p-tableheadercheckbox .p-checkbox-checked .p-checkbox-box,
+p-tableheadercheckbox .p-checkbox.p-highlight .p-checkbox-box,
+p-tableheadercheckbox .p-checkbox-box.p-highlight {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+}
+
+/* Selected row highlight */
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  outline: none;
+}
+
+/* ============================================================
+   THEME SYSTEM — data-theme="light" / data-theme="dark"
+   Applied on <html> via LayoutService + PrimeNG darkModeSelector
+   ============================================================ */
+
+/* ── LIGHT theme — CSS variables (default, no selector needed) ── */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --app-bg:              #f4f6fb;
+  --app-card-bg:         #ffffff;
+  --app-card-border:     #e2e8f0;
+  --app-card-shadow:     0 1px 6px rgba(0,0,0,.08);
+  --app-input-bg:        #ffffff;
+  --app-input-border:    #cbd5e1;
+  --app-panel-bg:        #ffffff;
+  --app-panel-header-bg: #f8fafc;
+  --app-surface-hover:   #f1f5f9;
+  --app-surface-border:  #e2e8f0;
+  --app-topbar-bg:       #ffffff;
+  --app-topbar-border:   #e2e8f0;
+  --app-topbar-text:     #1e293b;
+  --app-sidebar-bg:      #ffffff;
+  --app-sidebar-border:  #e2e8f0;
+  --app-text-primary:    #1e293b;
+  --app-text-secondary:  #64748b;
+  --app-text-muted:      #94a3b8;
+  --billing-price-text:  #6366f1;
+  --success-bg:    #f0fdf4;
+  --success-border:#86efac;
+  --cancel-bg:     #fff7ed;
+  --cancel-border: #fdba74;
+}
+/* ── DARK theme — CSS variables ── */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --app-bg:              #0f172a;
+  --app-card-bg:         #1e293b;
+  --app-card-border:     #334155;
+  --app-card-shadow:     0 2px 12px rgba(0,0,0,.5);
+  --app-input-bg:        #0f172a;
+  --app-input-border:    #334155;
+  --app-panel-bg:        #1e293b;
+  --app-panel-header-bg: #0f172a;
+  --app-surface-hover:   #334155;
+  --app-surface-border:  #334155;
+  --app-topbar-bg:       #1e293b;
+  --app-topbar-border:   #334155;
+  --app-topbar-text:     #f1f5f9;
+  --app-sidebar-bg:      #1e293b;
+  --app-sidebar-border:  #334155;
+  --app-text-primary:    #f1f5f9;
+  --app-text-secondary:  #94a3b8;
+  --app-text-muted:      #64748b;
+  --billing-price-text:  #818cf8;
+  --success-bg:    rgba(16,185,129,.12);
+  --success-border:rgba(16,185,129,.35);
+  --cancel-bg:     rgba(245,158,11,.10);
+  --cancel-border: rgba(245,158,11,.30);
+}
+/* ── Base body ── */
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text-primary);
+}
+/* ── Smooth transitions on theme switch ── */
+body, .topbar, app-navbar, .p-menubar, .app-shell, .app-content,
+.p-card, .p-toolbar, .p-datatable-wrapper, .p-datatable-table,
+.p-datatable-thead > tr > th, .p-datatable-tbody > tr > td,
+.p-paginator, .p-inputtext, .p-select, .p-dropdown,
+.p-dialog, .notification-panel, .plan-card, input, textarea,
+.chatbot-container-floating, .chatbot-messages, .chatbot-input-form,
+.chatbot-footer, .message-content, .feedback-btn {
+  transition: background-color 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, box-shadow 0.2s ease;
+}
+/* ── App shell ── */
+.app-shell, .app-content { background: var(--app-bg); }
+/* ── Topbar ── */
+.topbar {
+  background: var(--app-topbar-bg) !important;
+  border-bottom: 1px solid var(--app-topbar-border) !important;
+  color: var(--app-topbar-text) !important;
+}
+.topbar .brand, .topbar .page-title { color: var(--app-topbar-text) !important; }
+/* ── Theme toggle button ── */
+.theme-toggle-btn { color: var(--app-topbar-text) !important; opacity: 0.85; }
+.theme-toggle-btn:hover { opacity: 1; }
+/* ── Sidebar / Navbar ── */
+app-navbar, .p-menubar {
+  background: var(--app-sidebar-bg) !important;
+  border-color: var(--app-sidebar-border) !important;
+}
+/* ── Notification panel ── */
+.notification-panel { background: var(--app-panel-bg) !important; border-color: var(--app-card-border) !important; color: var(--app-text-primary) !important; }
+.panel-header        { background: var(--app-panel-header-bg) !important; border-color: var(--app-surface-border) !important; color: var(--app-text-primary) !important; }
+.notification-item   { border-color: var(--app-surface-border) !important; }
+.notification-message{ color: var(--app-text-primary) !important; }
+.notification-time   { color: var(--app-text-muted) !important; }
+/* ── Custom cards (stat-card, plan-card, table-card, stat-mini) ── */
+.stat-card, .table-card, .stat-mini {
+  background: var(--app-card-bg) !important;
+  border-color: var(--app-card-border) !important;
+  box-shadow: var(--app-card-shadow) !important;
+  color: var(--app-text-primary) !important;
+}
+/* ── Billing / Plans ── */
+.plan-card        { background: var(--app-card-bg) !important; border-color: var(--app-card-border) !important; box-shadow: var(--app-card-shadow) !important; }
+.plan-name        { color: var(--app-text-primary) !important; }
+.plan-description { color: var(--app-text-secondary) !important; }
+.price-amount     { color: var(--billing-price-text) !important; }
+.price-free       { color: #22c55e !important; }
+.price-period     { color: var(--app-text-secondary) !important; }
+.limit-chip       { background: var(--app-surface-hover) !important; color: var(--app-text-primary) !important; }
+.limit-chip small { color: var(--app-text-muted) !important; }
+.features-list li { color: var(--app-text-primary) !important; }
+.compare-note     { color: var(--app-text-muted) !important; }
+.hero-title       { color: var(--app-text-primary) !important; }
+.hero-sub         { color: var(--app-text-secondary) !important; }
+.plan-price-divider { border-color: var(--app-surface-border) !important; }
+/* ── Generic page elements ── */
+h1, h2, h3, h4, h5, h6 { color: var(--app-text-primary); }
+label                   { color: var(--app-text-secondary); }
+.p-floatlabel label, .form-label, .field > label { color: var(--app-text-secondary) !important; }
+.form-field label       { color: var(--app-text-secondary) !important; }
+.transaction-id         { background: var(--app-surface-hover) !important; color: var(--app-text-primary) !important; }
+/* ── Settings ── */
+.page-header h1   { color: var(--app-text-primary) !important; }
+.subtitle         { color: var(--app-text-secondary) !important; }
+/* ============================================================
+   PrimeNG OVERRIDES — LIGHT
+   ============================================================ */
+[data-theme="light"] {
+  /* Menubar */
+  .p-menubar { background: #ffffff !important; border-color: #e2e8f0 !important; }
+  .p-menubar .p-menuitem-content { background: transparent !important; }
+  .p-menubar .p-menuitem-link .p-menuitem-text,
+  .p-menubar .p-menuitem-link .p-menuitem-icon { color: #334155 !important; }
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content { background: #f1f5f9 !important; }
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover .p-menuitem-text,
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover .p-menuitem-icon,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content .p-menuitem-text,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content .p-menuitem-icon { color: #6366f1 !important; }
+  /* Card */
+  .p-card, .p-card .p-card-body, .p-card .p-card-content,
+  .p-card .p-card-header, .p-card .p-card-footer { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  /* Toolbar */
+  .p-toolbar { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  /* DataTable */
+  .p-datatable-wrapper, .p-datatable-table { background: #ffffff !important; color: #1e293b !important; }
+  .p-datatable-thead > tr > th { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-datatable-tbody > tr > td { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-datatable-tbody > tr:not(.p-highlight):hover > td { background: #f1f5f9 !important; }
+  .p-datatable-tbody > tr:hover > td { background: #f1f5f9 !important; }
+  .p-datatable-tfoot > tr > td { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-datatable-header, .p-datatable > .p-toolbar { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-datatable-emptymessage td { background: #ffffff !important; color: #64748b !important; }
+  /* Paginator */
+  .p-paginator { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-paginator .p-paginator-page, .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-prev, .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-last { color: #1e293b !important; background: transparent !important; }
+  .p-paginator .p-paginator-page.p-highlight { background: #6366f1 !important; color: #fff !important; }
+  .p-paginator .p-paginator-page:hover, .p-paginator .p-paginator-next:hover,
+  .p-paginator .p-paginator-prev:hover { background: #f1f5f9 !important; }
+  /* Inputs */
+  .p-inputtext, input[type="text"], input[type="email"], input[type="password"],
+  input[type="number"], input[type="search"], textarea {
+    background: #ffffff !important; color: #1e293b !important; border-color: #cbd5e1 !important; }
+  .p-inputtext::placeholder, input::placeholder, textarea::placeholder { color: #94a3b8 !important; }
+  .p-icon-field .p-inputicon, .p-inputicon { color: #94a3b8 !important; }
+  /* Select */
+  .p-select, .p-dropdown { background: #ffffff !important; color: #1e293b !important; border-color: #cbd5e1 !important; }
+  .p-select-label, .p-dropdown-label { color: #1e293b !important; }
+  .p-select-overlay, .p-dropdown-panel { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,.1) !important; }
+  .p-select-option, .p-dropdown-item { color: #1e293b !important; background: transparent !important; }
+  .p-select-option:hover, .p-dropdown-item:hover { background: #f1f5f9 !important; }
+  .p-select-option.p-select-option-selected { background: #ede9fe !important; color: #6366f1 !important; }
+  /* Dialog */
+  .p-dialog, .p-dialog .p-dialog-header, .p-dialog .p-dialog-content,
+  .p-dialog .p-dialog-footer { background: #ffffff !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  /* Tabs */
+  .p-tabs, .p-tabview, .p-tabpanels, .p-tabview-panels { background: #ffffff !important; }
+  .p-tablist, .p-tabview-nav { background: #ffffff !important; border-color: #e2e8f0 !important; }
+  .p-tab, .p-tabview-nav li .p-tabview-nav-link { color: #64748b !important; background: transparent !important; }
+  .p-tab:hover, .p-tabview-nav li .p-tabview-nav-link:hover { color: #1e293b !important; }
+  .p-tab.p-tab-active, .p-tabview-nav li.p-highlight .p-tabview-nav-link { color: #6366f1 !important; border-color: #6366f1 !important; }
+  /* Panel / Overlay */
+  .p-panel { background: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
+  .p-panel .p-panel-header { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-panel .p-panel-content { background: #ffffff !important; color: #1e293b !important; }
+  .p-overlaypanel, .p-popover { background: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; box-shadow: 0 4px 20px rgba(0,0,0,.1) !important; }
+  /* Misc */
+  .p-chip { background: #f1f5f9 !important; color: #334155 !important; }
+  .p-divider::before { border-color: #e2e8f0 !important; }
+  .p-fieldset { background: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
+  .p-fieldset-legend { background: #ffffff !important; color: #1e293b !important; }
+  .p-breadcrumb { background: transparent !important; border-color: transparent !important; }
+  .p-breadcrumb .p-breadcrumb-item-link { color: #64748b !important; }
+  .p-breadcrumb .p-breadcrumb-item-link:hover { color: #1e293b !important; }
+  /* Checkbox — unchecked */
+  .p-checkbox .p-checkbox-box,
+  .p-radiobutton .p-radiobutton-box { background: #ffffff !important; border-color: #cbd5e1 !important; }
+  /* Checkbox — checked / selected (PrimeNG v21) */
+  .p-checkbox.p-checkbox-checked .p-checkbox-box,
+  .p-checkbox.p-highlight .p-checkbox-box,
+  .p-checkbox .p-checkbox-box.p-highlight,
+  .p-checkbox[aria-checked="true"] .p-checkbox-box {
+    background: #6366f1 !important;
+    border-color: #6366f1 !important;
+    color: #ffffff !important;
+  }
+  .p-checkbox.p-checkbox-checked .p-checkbox-icon,
+  .p-checkbox.p-highlight .p-checkbox-box .p-checkbox-icon,
+  .p-checkbox.p-checkbox-checked .p-icon,
+  .p-checkbox.p-highlight .p-checkbox-box .p-icon,
+  .p-checkbox.p-checkbox-checked .p-checkbox-box svg,
+  .p-checkbox.p-checkbox-checked .p-checkbox-box svg path,
+  .p-checkbox.p-highlight .p-checkbox-box svg,
+  .p-checkbox.p-highlight .p-checkbox-box svg path {
+    color: #ffffff !important; fill: #ffffff !important; stroke: #ffffff !important;
+    opacity: 1 !important; visibility: visible !important;
+  }
+  /* Table header "select all" checkbox when checked */
+  p-tableheadercheckbox .p-checkbox-checked .p-checkbox-box,
+  p-tableheadercheckbox .p-checkbox.p-highlight .p-checkbox-box,
+  p-tableheadercheckbox .p-checkbox-box.p-highlight { background: #6366f1 !important; border-color: #6366f1 !important; }
+  /* Selected row highlight in light mode */
+  .p-datatable-tbody > tr.p-highlight > td { background: #eef2ff !important; color: #1e293b !important; }
+  .p-datatable-tbody > tr.p-highlight:hover > td { background: #e0e7ff !important; }
+  .p-datepicker, .p-datepicker-panel { background: #ffffff !important; border-color: #e2e8f0 !important; color: #1e293b !important; }
+  .p-datepicker .p-datepicker-header { background: #f8fafc !important; color: #1e293b !important; border-color: #e2e8f0 !important; }
+  .p-splitter { background: #f4f6fb !important; border-color: #e2e8f0 !important; }
+  /* Text */
+  h1, h2, h3, h4, h5, h6 { color: #1e293b !important; }
+  td, th { color: #1e293b !important; }
+  /* Checkbox icon must stay white even inside td */
+  td .p-checkbox-checked .p-checkbox-box svg,
+  td .p-checkbox-checked .p-checkbox-box svg path,
+  td .p-checkbox.p-highlight .p-checkbox-box svg,
+  td .p-checkbox.p-highlight .p-checkbox-box svg path,
+  th .p-checkbox-checked .p-checkbox-box svg,
+  th .p-checkbox-checked .p-checkbox-box svg path,
+  th .p-checkbox.p-highlight .p-checkbox-box svg,
+  th .p-checkbox.p-highlight .p-checkbox-box svg path { color: #ffffff !important; fill: #ffffff !important; }
+}
+/* ============================================================
+   PrimeNG OVERRIDES — DARK
+   ============================================================ */
+[data-theme="dark"] {
+  /* Page */
+  body, .app-shell, .app-content { background-color: #0f172a !important; color: #f1f5f9 !important; }
+  /* Menubar */
+  .p-menubar, .p-menubar .p-menubar-root-list { background: #1e293b !important; border-color: #334155 !important; }
+  .p-menubar .p-menuitem-content { background: transparent !important; }
+  .p-menubar .p-menuitem-link .p-menuitem-text { color: #cbd5e1 !important; }
+  .p-menubar .p-menuitem-link .p-menuitem-icon { color: #94a3b8 !important; }
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content { background: #334155 !important; }
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover .p-menuitem-text,
+  .p-menubar .p-menuitem:not(.menu-section-label) > .p-menuitem-content:hover .p-menuitem-icon,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content .p-menuitem-text,
+  .p-menubar .p-menuitem.p-focus > .p-menuitem-content .p-menuitem-icon { color: #818cf8 !important; }
+  .p-menuitem-separator { border-color: #334155 !important; }
+  /* Card */
+  .p-card, .p-card .p-card-body, .p-card .p-card-content,
+  .p-card .p-card-header, .p-card .p-card-footer { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-card { box-shadow: 0 2px 12px rgba(0,0,0,.5) !important; }
+  /* Toolbar */
+  .p-toolbar { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  /* DataTable */
+  .p-datatable-wrapper, .p-datatable-table { background: #1e293b !important; color: #f1f5f9 !important; }
+  .p-datatable-thead > tr > th { background: #263548 !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-datatable-tbody > tr > td { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-datatable-tbody > tr:not(.p-highlight):hover > td { background: #334155 !important; }
+  .p-datatable-tbody > tr:hover > td { background: #334155 !important; }
+  .p-datatable-tfoot > tr > td { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-datatable-header, .p-datatable > .p-toolbar { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-datatable-emptymessage td { background: #1e293b !important; color: #94a3b8 !important; }
+  /* Paginator */
+  .p-paginator { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-paginator .p-paginator-page, .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-prev, .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-last { color: #f1f5f9 !important; background: transparent !important; }
+  .p-paginator .p-paginator-page.p-highlight { background: #6366f1 !important; color: #fff !important; }
+  .p-paginator .p-paginator-page:hover, .p-paginator .p-paginator-next:hover,
+  .p-paginator .p-paginator-prev:hover { background: #334155 !important; }
+  /* Inputs */
+  .p-inputtext, input[type="text"], input[type="email"], input[type="password"],
+  input[type="number"], input[type="search"], textarea {
+    background: #0f172a !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-inputtext::placeholder, input::placeholder, textarea::placeholder { color: #64748b !important; }
+  .p-icon-field .p-inputicon, .p-inputicon { color: #64748b !important; }
+  /* Select */
+  .p-select, .p-dropdown { background: #0f172a !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-select-label, .p-dropdown-label { color: #f1f5f9 !important; }
+  .p-select-overlay, .p-dropdown-panel { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; box-shadow: 0 4px 20px rgba(0,0,0,.5) !important; }
+  .p-select-option, .p-dropdown-item { color: #f1f5f9 !important; background: transparent !important; }
+  .p-select-option:hover, .p-dropdown-item:hover { background: #334155 !important; }
+  .p-select-option.p-select-option-selected { background: rgba(129,140,248,.15) !important; color: #818cf8 !important; }
+  /* Dialog */
+  .p-dialog { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-dialog .p-dialog-header { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-dialog .p-dialog-content { background: #1e293b !important; color: #f1f5f9 !important; }
+  .p-dialog .p-dialog-footer { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  /* Tabs */
+  .p-tabs, .p-tabview { background: #1e293b !important; }
+  .p-tablist, .p-tabview-nav { background: #1e293b !important; border-color: #334155 !important; }
+  .p-tab, .p-tabview-nav li .p-tabview-nav-link { color: #94a3b8 !important; background: transparent !important; }
+  .p-tab:hover, .p-tabview-nav li .p-tabview-nav-link:hover { color: #f1f5f9 !important; }
+  .p-tab.p-tab-active, .p-tabview-nav li.p-highlight .p-tabview-nav-link { color: #818cf8 !important; border-color: #818cf8 !important; }
+  .p-tabpanels, .p-tabview-panels { background: #1e293b !important; color: #f1f5f9 !important; }
+  /* Panel / Overlay */
+  .p-panel { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+  .p-panel .p-panel-header { background: #263548 !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-panel .p-panel-content { background: #1e293b !important; color: #f1f5f9 !important; }
+  .p-overlaypanel, .p-popover { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; box-shadow: 0 4px 20px rgba(0,0,0,.5) !important; }
+  /* Misc */
+  .p-chip { background: #334155 !important; color: #f1f5f9 !important; }
+  .p-tag { color: #fff !important; }
+  .p-divider::before { border-color: #334155 !important; }
+  .p-divider-horizontal::before { border-top-color: #334155 !important; }
+  .p-divider-vertical::before { border-left-color: #334155 !important; }
+  .p-fieldset { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+  .p-fieldset-legend { background: #1e293b !important; color: #f1f5f9 !important; }
+  .p-breadcrumb { background: transparent !important; border-color: transparent !important; }
+  .p-breadcrumb .p-breadcrumb-item-link { color: #94a3b8 !important; }
+  .p-breadcrumb .p-breadcrumb-item-link:hover { color: #f1f5f9 !important; }
+  /* Checkbox — unchecked */
+  .p-checkbox .p-checkbox-box,
+  .p-radiobutton .p-radiobutton-box { background: #0f172a !important; border-color: #475569 !important; }
+  /* Checkbox — checked / selected (PrimeNG v21) */
+  .p-checkbox.p-checkbox-checked .p-checkbox-box,
+  .p-checkbox.p-highlight .p-checkbox-box,
+  .p-checkbox .p-checkbox-box.p-highlight,
+  .p-checkbox[aria-checked="true"] .p-checkbox-box {
+    background: #818cf8 !important;
+    border-color: #818cf8 !important;
+    color: #ffffff !important;
+  }
+  .p-checkbox.p-checkbox-checked .p-checkbox-icon,
+  .p-checkbox.p-highlight .p-checkbox-box .p-checkbox-icon,
+  .p-checkbox.p-checkbox-checked .p-icon,
+  .p-checkbox.p-highlight .p-checkbox-box .p-icon,
+  .p-checkbox.p-checkbox-checked .p-checkbox-box svg,
+  .p-checkbox.p-checkbox-checked .p-checkbox-box svg path,
+  .p-checkbox.p-highlight .p-checkbox-box svg,
+  .p-checkbox.p-highlight .p-checkbox-box svg path {
+    color: #ffffff !important; fill: #ffffff !important; stroke: #ffffff !important;
+    opacity: 1 !important; visibility: visible !important;
+  }
+  /* Table header "select all" checkbox when checked */
+  p-tableheadercheckbox .p-checkbox-checked .p-checkbox-box,
+  p-tableheadercheckbox .p-checkbox.p-highlight .p-checkbox-box,
+  p-tableheadercheckbox .p-checkbox-box.p-highlight { background: #818cf8 !important; border-color: #818cf8 !important; }
+  /* Selected row highlight in dark mode */
+  .p-datatable-tbody > tr.p-highlight > td { background: rgba(129,140,248,.2) !important; color: #f1f5f9 !important; }
+  .p-datatable-tbody > tr.p-highlight:hover > td { background: rgba(129,140,248,.3) !important; }
+  .p-toggleswitch .p-toggleswitch-slider { background: #334155 !important; }
+  .p-datepicker, .p-datepicker-panel { background: #1e293b !important; border-color: #334155 !important; color: #f1f5f9 !important; }
+  .p-datepicker .p-datepicker-header { background: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+  .p-datepicker .p-datepicker-calendar td > span { color: #f1f5f9 !important; }
+  .p-datepicker .p-datepicker-calendar td > span:hover { background: #334155 !important; }
+  .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span { background: #334155 !important; }
+  .p-splitter { background: #0f172a !important; border-color: #334155 !important; }
+  /* Buttons */
+  .p-button.p-button-outlined:not(.p-button-primary):not(.p-button-success):not(.p-button-danger):not(.p-button-warning):not(.p-button-info) {
+    border-color: #334155 !important; color: #cbd5e1 !important; }
+  .p-button.p-button-outlined:not(.p-button-primary):not(.p-button-success):not(.p-button-danger):not(.p-button-warning):not(.p-button-info):hover {
+    background: #334155 !important; color: #f1f5f9 !important; }
+  .p-button.p-button-text:not(.p-button-primary):not(.p-button-success):not(.p-button-danger) { color: #cbd5e1 !important; }
+  .p-button.p-button-text:not(.p-button-primary):not(.p-button-success):not(.p-button-danger):hover { background: #334155 !important; }
+  /* Text */
+  h1, h2, h3, h4, h5, h6 { color: #f1f5f9 !important; }
+  td, th { color: #f1f5f9 !important; }
+  /* Checkbox icon must stay white even inside td — override td color */
+  td .p-checkbox-checked .p-checkbox-box svg,
+  td .p-checkbox-checked .p-checkbox-box svg path,
+  td .p-checkbox.p-highlight .p-checkbox-box svg,
+  td .p-checkbox.p-highlight .p-checkbox-box svg path,
+  th .p-checkbox-checked .p-checkbox-box svg,
+  th .p-checkbox-checked .p-checkbox-box svg path,
+  th .p-checkbox.p-highlight .p-checkbox-box svg,
+  th .p-checkbox.p-highlight .p-checkbox-box svg path { color: #ffffff !important; fill: #ffffff !important; }
+  label { color: #94a3b8; }
+  .p-floatlabel label, .form-label, .field > label { color: #94a3b8 !important; }
+}
+/* ============================================================
+   RTL SUPPORT
+   ============================================================ */
+html[dir="rtl"] {
+  .p-datatable .p-sortable-column .p-sortable-column-icon { margin-right: 0; margin-left: 0.5rem; order: -1; }
+  .p-inputicon-left > .p-icon-field > .p-inputtext { padding-left: 0.75rem; padding-right: 2.5rem; }
+  .p-inputicon-right > .p-icon-field > .p-inputtext { padding-right: 0.75rem; padding-left: 2.5rem; }
+  .p-inputicon.p-inputicon-left  { left: auto; right: 0.75rem; }
+  .p-inputicon.p-inputicon-right { right: auto; left: 0.75rem; }
+  .p-dialog-footer { display: flex; flex-direction: row-reverse; justify-content: flex-start; gap: 0.5rem; }
+  .p-toast.p-toast-top-right { left: 20px; right: auto; }
+  .p-toast.p-toast-top-left  { right: 20px; left: auto; }
+  .toolbar-actions { flex-direction: row-reverse; }
+  .form-grid label { text-align: right; }
+  .p-breadcrumb .p-menuitem-separator { transform: scaleX(-1); }
+  .p-tieredmenu .p-tieredmenu-submenu-icon { transform: scaleX(-1); }
+}
+
+/* ── RESPONSIVE UTILITIES ── */
+@media (max-width: 1536px) { .xl\\:grid-cols-4 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1280px) { .xl\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1024px) { .lg\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 768px) {
+  .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\\:flex-col { flex-direction: column; }
+  .md\\:gap-3 { gap: 0.75rem; }
+  .md\\:p-3 { padding: 0.75rem; }
+  .md\\:text-center { text-align: center; }
+}
+@media (max-width: 640px) {
+  .sm\\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .sm\\:flex-col { flex-direction: column; }
+  .sm\\:gap-2 { gap: 0.5rem; }
+  .sm\\:p-2 { padding: 0.5rem; }
+  .sm\\:text-center { text-align: center; }
+  .sm\\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+}
+@media (max-width: 480px) {
+  .xs\\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .xs\\:flex-col { flex-direction: column; }
+  .xs\\:gap-1 { gap: 0.25rem; }
+  .xs\\:p-1 { padding: 0.25rem; }
+  .xs\\:text-xs { font-size: 0.75rem; line-height: 1rem; }
+  .xs\\:hidden { display: none; }
+}
+
+/* Container utilities */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+@media (max-width: 640px) { .container { padding: 0 0.5rem; } }
+
+/* Spacing utilities */
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.space-x-4 > * + * { margin-left: 1rem; }
+@media (max-width: 640px) {
+  .space-y-4 > * + * { margin-top: 0.75rem; }
+  .space-y-6 > * + * { margin-top: 1rem; }
+  .space-x-4 > * + * { margin-left: 0.5rem; }
+}
+
+/* Flex utilities */
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+
+/* Text utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.leading-tight { line-height: 1.25; }
+.leading-relaxed { line-height: 1.625; }
+
+/* Display utilities */
+.hidden { display: none; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+.flex { display: flex; }
+.grid { display: grid; }
+
+/* Position utilities */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Width/Height utilities */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+/* Border radius */
+.rounded { border-radius: 0.25rem; }
+.rounded-md { border-radius: 0.375rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+
+/* Shadow utilities */
+.shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+
+/* ============================================================
+   CHATBOT — Dark / Light theme overrides (global scope)
+   Angular Emulated Encapsulation means :host vars inside the
+   component SCSS only inherit from :root, not from [data-theme].
+   We override them here so they respond to theme toggling.
+   ============================================================ */
+[data-theme="dark"] app-chatbot {
+  --cb-bg:            #1e293b;
+  --cb-border:        #334155;
+  --cb-shadow:        0 5px 40px rgba(0,0,0,.55);
+  --cb-text:          #f1f5f9;
+  --cb-text-sub:      #94a3b8;
+  --cb-input-bg:      #0f172a;
+  --cb-input-border:  #334155;
+  --cb-msg-ai-bg:     #0f172a;
+  --cb-msg-ai-text:   #f1f5f9;
+  --cb-footer-border: #334155;
+  --cb-btn-bg:        #334155;
+  --cb-btn-border:    #475569;
+  --cb-btn-text:      #94a3b8;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-container-floating {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 5px 40px rgba(0,0,0,.55);
+}
+
+[data-theme="dark"] app-chatbot .chatbot-messages {
+  background: #1e293b;
+}
+
+[data-theme="dark"] app-chatbot .message.assistant-message .message-content {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+[data-theme="dark"] app-chatbot .message.assistant-message p,
+[data-theme="dark"] app-chatbot .message.assistant-message ul,
+[data-theme="dark"] app-chatbot .message.assistant-message li {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-input-form {
+  background: #1e293b;
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-input-form .message-input {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-input-form .message-input::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-footer {
+  background: #1e293b;
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-footer button,
+[data-theme="dark"] app-chatbot .chatbot-footer a {
+  background: #334155;
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] app-chatbot .chatbot-footer button:hover,
+[data-theme="dark"] app-chatbot .chatbot-footer a:hover {
+  background: #475569;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+[data-theme="dark"] app-chatbot .feedback-btn {
+  background: #334155;
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] app-chatbot .message-meta {
+  color: #64748b;
+}
+
+[data-theme="light"] app-chatbot {
+  --cb-bg:            #ffffff;
+  --cb-border:        #e2e8f0;
+  --cb-shadow:        0 5px 40px rgba(0,0,0,.16);
+  --cb-text:          #1e293b;
+  --cb-text-sub:      #64748b;
+  --cb-input-bg:      #ffffff;
+  --cb-input-border:  #cbd5e1;
+  --cb-msg-ai-bg:     #f8fafc;
+  --cb-msg-ai-text:   #1e293b;
+  --cb-footer-border: #e2e8f0;
+  --cb-btn-bg:        #f1f5f9;
+  --cb-btn-border:    #e2e8f0;
+  --cb-btn-text:      #64748b;
+}
+

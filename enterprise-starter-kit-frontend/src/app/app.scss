@@ -1,0 +1,117 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  background: var(--app-bg, #f4f6fb);
+  transition: background-color 0.25s ease;
+  overflow: hidden;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+app-navbar {
+  flex: 0 0 260px;
+  max-width: 260px;
+  width: 260px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+app-navbar.is-hidden {
+  flex: 0 0 0;
+  max-width: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 0;
+}
+
+html[dir="rtl"] .app-body {
+  flex-direction: row-reverse;
+}
+
+/* Mobile: sidebar is hidden by default, controlled via hamburger in sidebar */
+@media (max-width: 991px) {
+
+  /* Don't allocate any space for navbar in main layout - it's positioned fixed */
+  app-navbar {
+    flex: 0 0 0;
+    max-width: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .app-content {
+    width: 100%;
+    padding: 0;
+  }
+}
+
+/* Tablet improvements */
+@media (max-width: 768px) {
+  .app-content {
+    padding: 0;
+  }
+
+  app-navbar .sidebar {
+    width: 280px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .app-content {
+    padding: 0;
+  }
+
+  app-navbar .sidebar {
+    width: 100vw;
+  }
+}
+
+/* ── Floating AI Chatbot FAB (Pro upsell) ─────────────────────────────── */
+.chatbot-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chatbot-fab:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5);
+}
+
+.chatbot-fab i {
+  font-size: 1.5rem;
+}
+
+html[dir="rtl"] .chatbot-fab {
+  right: auto;
+  left: 2rem;
+}

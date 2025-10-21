@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>EnterpriseStarterKitFrontend</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Inline theme bootstrap – runs before any stylesheet is parsed -->
+  <script>
+    (function(){
+      var saved = localStorage.getItem('app_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var dark = saved ? saved === 'dark' : prefersDark;
+      var html = document.documentElement;
+      if (dark) {
+        html.classList.add('app-dark');
+        html.setAttribute('data-theme','dark');
+      } else {
+        html.classList.add('app-light');
+        html.setAttribute('data-theme','light');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

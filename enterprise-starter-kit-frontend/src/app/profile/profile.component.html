@@ -1,0 +1,234 @@
+<div class="profile-page">
+  <div class="background-effects">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <div class="profile-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="pi pi-user"></i>
+        {{ 'PROFILE.TITLE' | translate }}
+      </h1>
+      <p class="page-subtitle">{{ 'PROFILE.SUBTITLE' | translate }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="loading-container">
+    <div class="loading-card">
+      <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+      <span>{{ 'PROFILE.LOADING_PROFILE' | translate }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading()" class="profile-content">
+    <p-tabs [(value)]="activeTabIndex">
+      <p-tablist>
+        <p-tab [value]="0">
+          <div class="tab-header">
+            <i class="pi pi-user"></i>
+            <span>{{ 'PROFILE.GENERAL_INFO' | translate }}</span>
+          </div>
+        </p-tab>
+        <p-tab [value]="1">
+          <div class="tab-header">
+            <i class="pi pi-shield"></i>
+            <span>{{ 'PROFILE.SECURITY' | translate }}</span>
+          </div>
+        </p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <p-tabpanel [value]="0">
+          <div class="tab-content">
+            <div class="avatar-section">
+              <div class="avatar-wrapper">
+                <div class="avatar-image" [style.background-image]="'url(' + avatarUrl + ')'">
+                  <div *ngIf="!avatarUrl" class="avatar-placeholder">
+                    <i class="pi pi-user"></i>
+                  </div>
+                </div>
+                <div class="avatar-overlay" (click)="triggerAvatarUpload()">
+                  <i class="pi pi-camera"></i>
+                  <span>{{ 'PROFILE.CHANGE_AVATAR' | translate }}</span>
+                </div>
+                <input type="file" #avatarInput accept="image/*" (change)="onAvatarSelect($event)" style="display: none" />
+              </div>
+              <div class="avatar-info">
+                <h3 class="user-display-name">{{ currentProfile?.fullName || currentProfile?.username }}</h3>
+                <p class="user-email">{{ currentProfile?.email }}</p>
+              </div>
+            </div>
+
+            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="profile-form">
+              <div class="form-section">
+                <h4 class="section-title">
+                  <i class="pi pi-id-card"></i>
+                  {{ 'PROFILE.PERSONAL_INFO' | translate }}
+                </h4>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="username">
+                      <i class="pi pi-at"></i>
+                      {{ 'PROFILE.USERNAME' | translate }}
+                    </label>
+                    <div class="input-wrapper readonly">
+                      <input pInputText id="username" formControlName="username" readonly />
+                      <i class="pi pi-lock field-lock-icon"></i>
+                    </div>
+                    <small class="field-hint">{{ 'PROFILE.USERNAME_HINT' | translate }}</small>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="email">
+                      <i class="pi pi-envelope"></i>
+                      {{ 'PROFILE.EMAIL' | translate }}
+                    </label>
+                    <div class="input-wrapper readonly">
+                      <input pInputText id="email" formControlName="email" readonly />
+                      <i class="pi pi-lock field-lock-icon"></i>
+                    </div>
+                    <small class="field-hint">{{ 'PROFILE.EMAIL_HINT' | translate }}</small>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="fullName">
+                      <i class="pi pi-user"></i>
+                      {{ 'PROFILE.FULL_NAME' | translate }}
+                    </label>
+                    <div class="input-wrapper">
+                      <input pInputText id="fullName" formControlName="fullName" [placeholder]="'PROFILE.FULL_NAME_PLACEHOLDER' | translate" />
+                    </div>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="phoneNumber">
+                      <i class="pi pi-phone"></i>
+                      {{ 'PROFILE.PHONE_NUMBER' | translate }}
+                    </label>
+                    <div class="input-wrapper">
+                      <input pInputText id="phoneNumber" formControlName="phoneNumber" [placeholder]="'PROFILE.PHONE_PLACEHOLDER' | translate" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h4 class="section-title">
+                  <i class="pi pi-globe"></i>
+                  {{ 'PROFILE.PREFERENCES' | translate }}
+                </h4>
+                <div class="form-grid">
+                  <div class="form-field language-field">
+                    <label for="preferredLanguage">
+                      <i class="pi pi-language"></i>
+                      {{ 'PROFILE.PREFERRED_LANGUAGE' | translate }}
+                    </label>
+                    <p-select
+                      id="preferredLanguage"
+                      formControlName="preferredLanguage"
+                      [options]="languageOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      [placeholder]="'PROFILE.SELECT_LANGUAGE' | translate"
+                      styleClass="w-full"
+                      (onChange)="onLanguageChange($event)"
+                    ></p-select>
+                    <small class="field-hint">{{ 'PROFILE.LANGUAGE_HINT' | translate }}</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button pButton type="submit" [label]="'PROFILE.SAVE_CHANGES' | translate" icon="pi pi-check" class="save-btn"
+                  [disabled]="profileForm.invalid || profileForm.pristine || savingProfile()" [loading]="savingProfile()"></button>
+                <button pButton type="button" [label]="'COMMON.CANCEL' | translate" icon="pi pi-times" class="p-button-outlined cancel-btn"
+                  (click)="resetProfileForm()" [disabled]="savingProfile() || profileForm.pristine"></button>
+              </div>
+            </form>
+          </div>
+        </p-tabpanel>
+
+        <p-tabpanel [value]="1">
+          <div class="tab-content">
+            <div class="security-info">
+              <div class="security-icon">
+                <i class="pi pi-lock"></i>
+              </div>
+              <div class="security-text">
+                <h3>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</h3>
+                <p>{{ 'PROFILE.PASSWORD_INFO' | translate }}</p>
+              </div>
+            </div>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="password-form">
+              <div class="form-grid single-column">
+                <div class="form-field" [class.has-error]="isPasswordFieldInvalid('oldPassword')">
+                  <label for="oldPassword">
+                    <i class="pi pi-key"></i>
+                    {{ 'PROFILE.CURRENT_PASSWORD' | translate }}
+                  </label>
+                  <div class="input-wrapper">
+                    <p-password inputId="oldPassword" formControlName="oldPassword"
+                      [placeholder]="'PROFILE.CURRENT_PASSWORD_PLACEHOLDER' | translate"
+                      [toggleMask]="true" [feedback]="false" styleClass="w-full"></p-password>
+                  </div>
+                  <small class="error-message" *ngIf="isPasswordFieldInvalid('oldPassword')">
+                    {{ 'VALIDATION.REQUIRED' | translate }}
+                  </small>
+                </div>
+
+                <div class="form-field" [class.has-error]="isPasswordFieldInvalid('newPassword')">
+                  <label for="newPassword">
+                    <i class="pi pi-lock"></i>
+                    {{ 'PROFILE.NEW_PASSWORD' | translate }}
+                  </label>
+                  <div class="input-wrapper">
+                    <p-password inputId="newPassword" formControlName="newPassword"
+                      [placeholder]="'PROFILE.NEW_PASSWORD_PLACEHOLDER' | translate"
+                      [toggleMask]="true" [feedback]="true" styleClass="w-full"></p-password>
+                  </div>
+                  <small class="error-message" *ngIf="isPasswordFieldInvalid('newPassword')">
+                    {{ 'VALIDATION.PASSWORD_MIN_LENGTH' | translate }}
+                  </small>
+                </div>
+
+                <div class="form-field" [class.has-error]="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">
+                  <label for="confirmPassword">
+                    <i class="pi pi-lock"></i>
+                    {{ 'PROFILE.CONFIRM_PASSWORD' | translate }}
+                  </label>
+                  <div class="input-wrapper">
+                    <p-password inputId="confirmPassword" formControlName="confirmPassword"
+                      [placeholder]="'PROFILE.CONFIRM_PASSWORD_PLACEHOLDER' | translate"
+                      [toggleMask]="true" [feedback]="false" styleClass="w-full"></p-password>
+                  </div>
+                  <small class="error-message" *ngIf="passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched">
+                    {{ 'VALIDATION.PASSWORDS_NOT_MATCH' | translate }}
+                  </small>
+                </div>
+              </div>
+
+              <div class="password-requirements">
+                <h5>{{ 'PROFILE.PASSWORD_REQUIREMENTS' | translate }}</h5>
+                <ul>
+                  <li [class.valid]="passwordForm.get('newPassword')?.value?.length >= 8">
+                    <i class="pi" [ngClass]="passwordForm.get('newPassword')?.value?.length >= 8 ? 'pi-check-circle' : 'pi-circle'"></i>
+                    {{ 'PROFILE.REQ_MIN_LENGTH' | translate }}
+                  </li>
+                </ul>
+              </div>
+
+              <div class="form-actions">
+                <button pButton type="submit" [label]="'PROFILE.CHANGE_PASSWORD' | translate" icon="pi pi-shield" class="save-btn"
+                  [disabled]="passwordForm.invalid || changingPassword()" [loading]="changingPassword()"></button>
+                <button pButton type="button" [label]="'COMMON.CANCEL' | translate" icon="pi pi-times" class="p-button-outlined cancel-btn"
+                  (click)="resetPasswordForm()" [disabled]="changingPassword()"></button>
+              </div>
+            </form>
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>

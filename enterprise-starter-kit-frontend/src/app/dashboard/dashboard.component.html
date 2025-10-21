@@ -1,0 +1,391 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="start">
+      <div class="toolbar-title">
+        <i class="pi pi-home"></i>
+        {{ 'DASHBOARD.TITLE' | translate }}
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+      <div class="toolbar-actions">
+        <!-- Date Range Filter -->
+        <p-datePicker [(ngModel)]="dateFrom" placeholder="{{ 'DASHBOARD.DATE_FROM' | translate }}" dateFormat="yy-mm-dd"
+          [showIcon]="true" styleClass="date-filter-input"></p-datePicker>
+        <p-datePicker [(ngModel)]="dateTo" placeholder="{{ 'DASHBOARD.DATE_TO' | translate }}" dateFormat="yy-mm-dd"
+          [showIcon]="true" styleClass="date-filter-input"></p-datePicker>
+        <button pButton type="button" icon="pi pi-filter" [label]="'DASHBOARD.FILTER' | translate"
+          class="p-button-primary p-button-sm" (click)="filterByDateRange()" [disabled]="!dateFrom || !dateTo"></button>
+        <button pButton type="button" icon="pi pi-filter-slash" [label]="'DASHBOARD.CLEAR_FILTER' | translate"
+          class="p-button-outlined p-button-sm" (click)="clearDateFilter()" [disabled]="!dateFrom && !dateTo"></button>
+        <button pButton type="button" icon="pi pi-refresh" [label]="'COMMON.REFRESH' | translate"
+          class="p-button-outlined" (click)="loadStats()" [disabled]="loading()"
+          pTooltip="{{ 'DASHBOARD.REFRESH_TOOLTIP' | translate }}"></button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+  <br />
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <p-progressSpinner strokeWidth="4" animationDuration=".5s"></p-progressSpinner>
+    <span>{{ 'DASHBOARD.LOADING_STATS' | translate }}</span>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error() && !loading()" class="error-container">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ error() }}</span>
+    <button pButton type="button" [label]="'COMMON.RETRY' | translate" icon="pi pi-refresh"
+      class="p-button-outlined p-button-sm" (click)="loadStats()"></button>
+  </div>
+
+  <!-- Dashboard Content (Admins Only) -->
+  <div *ngIf="!loading() && !error() && isAdmin()" class="dashboard-content">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble orange cursor-pointer" (click)="navigate('/invoices')">
+            <i class="pi pi-file"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.TOTAL_INVOICES' | translate }}</div>
+            <div class="stat-value">{{ stats()?.totalInvoices || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble indigo cursor-pointer" (click)="navigate('/customers')">
+            <i class="pi pi-users"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.TOTAL_CUSTOMERS' | translate }}</div>
+            <div class="stat-value">{{ stats()?.totalCustomers || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble teal">
+            <i class="pi pi-dollar"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.TOTAL_AMOUNT' | translate }}</div>
+            <div class="stat-value">{{ stats()?.totalAmount | shortNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble green cursor-pointer" (click)="navigate('/invoices')">
+            <i class="pi pi-check-circle"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.PAID' | translate }}</div>
+            <div class="stat-value">{{ stats()?.paidCount || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble yellow cursor-pointer" (click)="navigate('/invoices')">
+            <i class="pi pi-clock"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.PENDING' | translate }}</div>
+            <div class="stat-value">{{ stats()?.pendingCount || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble red cursor-pointer" (click)="navigate('/invoices')">
+            <i class="pi pi-exclamation-circle"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.OVERDUE' | translate }}</div>
+            <div class="stat-value">{{ stats()?.overdueCount || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble gray cursor-pointer" (click)="navigate('/invoices')">
+            <i class="pi pi-times-circle"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.CANCELLED' | translate }}</div>
+            <div class="stat-value">{{ stats()?.cancelledCount || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Spacing between cards and charts -->
+    <div class="section-gap"></div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <p-card styleClass="chart-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="card-header-left">
+              <i class="pi pi-chart-pie"></i>
+              <span>{{ 'DASHBOARD.INVOICE_STATUS_DISTRIBUTION' | translate }}</span>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="chart-container" *ngIf="hasInvoices()">
+          <p-chart type="pie" [data]="pieChartData()" [options]="pieChartOptions" [width]="'100%'"></p-chart>
+        </div>
+
+        <div class="no-data-message" *ngIf="!hasInvoices()">
+          <i class="pi pi-inbox"></i>
+          <span>{{ 'DASHBOARD.NO_INVOICES' | translate }}</span>
+        </div>
+      </p-card>
+
+      <p-card styleClass="summary-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="card-header-left">
+              <i class="pi pi-info-circle"></i>
+              <span>{{ 'DASHBOARD.QUICK_SUMMARY.TITLE' | translate }}</span>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="summary-content">
+          <div class="summary-item">
+            <span class="summary-label">{{ 'DASHBOARD.QUICK_SUMMARY.PAYMENT_RATE' | translate }}</span>
+            <span class="summary-value success">{{ paymentRate() | localizedNumber }}%</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">{{ 'DASHBOARD.QUICK_SUMMARY.OVERDUE_RATE' | translate }}</span>
+            <span class="summary-value danger">{{ overdueRate() | localizedNumber }}%</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">{{ 'DASHBOARD.QUICK_SUMMARY.AVG_INVOICE' | translate }}</span>
+            <span class="summary-value">{{ averageInvoice() | shortNumber }}</span>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div class="quick-actions">
+            <span class="actions-label">{{ 'DASHBOARD.QUICK_ACTIONS.TITLE' | translate }}</span>
+            <div class="action-buttons">
+              <button pButton type="button" [label]="'DASHBOARD.QUICK_ACTIONS.VIEW_INVOICES' | translate"
+                icon="pi pi-list" class="p-button-outlined p-button-sm" (click)="navigateToInvoices()"></button>
+              <button pButton type="button" [label]="'DASHBOARD.QUICK_ACTIONS.REPORTS' | translate"
+                icon="pi pi-chart-bar" class="p-button-outlined p-button-sm" (click)="navigateToReports()"></button>
+            </div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Dashboard Content (Super Admin) -->
+  <div *ngIf="!loading() && !error() && isSuperAdmin()" class="dashboard-content">
+    <div class="stats-grid">
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble blue cursor-pointer" (click)="navigate('/admin/companies')">
+            <i class="pi pi-building"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'ADMIN.STATS.TOTAL_COMPANIES' | translate }}</div>
+            <div class="stat-value">{{ systemStats()?.totalCompanies || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble green cursor-pointer" (click)="navigate('/admin/companies')">
+            <i class="pi pi-check-circle"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'ADMIN.STATS.ACTIVE_COMPANIES' | translate }}</div>
+            <div class="stat-value">{{ systemStats()?.activeCompanies || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble indigo cursor-pointer" (click)="navigate('/admin/users')">
+            <i class="pi pi-users"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'ADMIN.STATS.TOTAL_USERS' | translate }}</div>
+            <div class="stat-value">{{ systemStats()?.totalUsers || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble orange">
+            <i class="pi pi-file"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'ADMIN.STATS.TOTAL_INVOICES' | translate }}</div>
+            <div class="stat-value">{{ systemStats()?.totalInvoices || 0 | localizedNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble teal">
+            <i class="pi pi-dollar"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.TOTAL_AMOUNT' | translate }}</div>
+            <div class="stat-value">{{ systemStats()?.totalRevenue | shortNumber }}</div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="section-gap"></div>
+
+    <div class="charts-section">
+      <p-card styleClass="chart-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="card-header-left">
+              <i class="pi pi-chart-pie"></i>
+              <span>{{ 'ADMIN.STATS.SYSTEM_OVERVIEW' | translate }}</span>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="summary-content">
+          <div class="summary-item">
+            <span class="summary-label">{{ 'ADMIN.STATS.ACTIVE_COMPANIES' | translate }}</span>
+            <span class="summary-value success">{{ systemStats()?.activeCompanies || 0 | localizedNumber }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">{{ 'ADMIN.STATS.TOTAL_USERS' | translate }}</span>
+            <span class="summary-value">{{ systemStats()?.totalUsers || 0 | localizedNumber }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">{{ 'ADMIN.STATS.TOTAL_INVOICES' | translate }}</span>
+            <span class="summary-value">{{ systemStats()?.totalInvoices || 0 | localizedNumber }}</span>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="summary-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="card-header-left">
+              <i class="pi pi-bolt"></i>
+              <span>{{ 'DASHBOARD.QUICK_ACTIONS.TITLE' | translate }}</span>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="summary-content">
+          <div class="summary-item cursor-pointer" (click)="navigate('/admin/companies')">
+            <span class="summary-label"><i class="pi pi-building mr-2"></i>{{ 'ADMIN.COMPANIES.TITLE' | translate
+              }}</span>
+            <span class="summary-value"><i class="pi pi-arrow-right"></i></span>
+          </div>
+          <div class="summary-item cursor-pointer" (click)="navigate('/admin/users')">
+            <span class="summary-label"><i class="pi pi-users mr-2"></i>{{ 'ADMIN.USERS.TITLE' | translate }}</span>
+            <span class="summary-value"><i class="pi pi-arrow-right"></i></span>
+          </div>
+          <div class="summary-item cursor-pointer" (click)="navigate('/admin/plans')">
+            <span class="summary-label"><i class="pi pi-list mr-2"></i>{{ 'ADMIN.PLANS.TITLE' | translate }}</span>
+            <span class="summary-value"><i class="pi pi-arrow-right"></i></span>
+          </div>
+          <div class="summary-item cursor-pointer" (click)="navigate('/admin/payments')">
+            <span class="summary-label"><i class="pi pi-wallet mr-2"></i>{{ 'ADMIN.PAYMENTS.TITLE' | translate }}</span>
+            <span class="summary-value"><i class="pi pi-arrow-right"></i></span>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Dashboard Content (Regular Users) -->
+  <div *ngIf="!loading() && !error() && !isAdmin() && !isSuperAdmin()" class="dashboard-content">
+    <!-- <p-card styleClass="welcome-card mb-4">
+      <div class="flex align-items-center gap-4 p-3">
+        <div
+          class="welcome-icon bg-primary-50 text-primary border-circle w-4rem h-4rem flex align-items-center justify-content-center">
+          <i class="pi pi-user text-3xl"></i>
+        </div>
+        <div>
+          <h2 class="m-0 text-xl font-bold">{{ 'COMMON.WELCOME' | translate }}</h2>
+          <p class="m-0 text-secondary mt-1">{{ 'DASHBOARD.USER_WELCOME_MESSAGE' | translate }}</p>
+        </div>
+      </div>
+    </p-card> -->
+
+    <h3 class="text-xl font-semibold mb-3">{{ 'DASHBOARD.QUICK_ACTIONS.TITLE' | translate }}</h3>
+
+    <div class="stats-grid">
+      <p-card styleClass="stat-card cursor-pointer" (click)="navigate('/invoices')">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble orange">
+            <i class="pi pi-file"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'DASHBOARD.QUICK_ACTIONS.VIEW_INVOICES' | translate }}</div>
+            <div class="stat-value text-xl"><i class="pi pi-arrow-right"></i></div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card cursor-pointer" (click)="navigate('/customers')">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble indigo">
+            <i class="pi pi-users"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'NAVBAR.CUSTOMERS' | translate }}</div>
+            <div class="stat-value text-xl"><i class="pi pi-arrow-right"></i></div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card cursor-pointer" (click)="navigate('/reports')">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble teal">
+            <i class="pi pi-chart-bar"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'NAVBAR.REPORTS' | translate }}</div>
+            <div class="stat-value text-xl"><i class="pi pi-arrow-right"></i></div>
+          </div>
+        </div>
+      </p-card>
+
+      <p-card styleClass="stat-card cursor-pointer" (click)="navigate('/profile')">
+        <div class="stat-card-inner">
+          <div class="stat-icon-bubble blue">
+            <i class="pi pi-user"></i>
+          </div>
+          <div class="stat-details">
+            <div class="stat-label">{{ 'NAVBAR.PROFILE' | translate }}</div>
+            <div class="stat-value text-xl"><i class="pi pi-arrow-right"></i></div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: esk-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-mayk_enterprise_kit_lite}
+      POSTGRES_USER: ${DB_USERNAME:-eskuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-eskpass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-eskuser} -d ${DB_NAME:-eskdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - esk-network
+
+  # Redis (cache + rate-limiting)
+  redis:
+    image: redis:7-alpine
+    container_name: esk-redis
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:-redispass}"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redispass}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - esk-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: esk-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-mayk_enterprise_kit_lite}
+      DB_USERNAME: ${DB_USERNAME:-eskuser}
+      DB_PASSWORD: ${DB_PASSWORD:-eskpass}
+      JWT_SECRET: ${JWT_SECRET:-Q0hBTkdFX01FX0lOX1BST0RfVE9fQV9WQUxJRF9CQVNFNjRfRU5DT0RFRF9TRUNSRVRfS0VZ}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200,http://localhost:8080}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_ENABLED: ${MAIL_ENABLED:-false}
+      MAIL_FROM: ${MAIL_FROM:-noreply@maykamasifuen.com}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redispass}
+      REDIS_CACHE_PREFIX: ${REDIS_CACHE_PREFIX:-aek_lite_}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    restart: unless-stopped
+    networks:
+      - esk-network
+
+networks:
+  esk-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

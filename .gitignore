@@ -1,0 +1,20 @@
+enterprise-starter-kit/.idea/*
+enterprise-starter-kit/target/*
+enterprise-starter-kit-frontend/.idea/*
+enterprise-starter-kit-frontend/node_modules/*
+enterprise-starter-kit-frontend/dist/*
+enterprise-starter-kit-frontend/.angular/*
+.idea/Mayk-Enterperise-Kit.iml
+.idea/copilot.data.migration.ask2agent.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+
+# Environment secrets — never commit
+.env
+*.env
+!.env.example
+nginx/certs/
+backups/
+logs/
+
